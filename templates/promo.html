@@ -1,0 +1,31 @@
+{{define "promo"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h1>La classe : {{.NomDeClasse}}</h1>
+    <p>La filière : {{.Filiere}}</p>
+    <p>Le niveau : {{.Niveau}}</p>
+    <p>Le nombre d'étudiant : {{.NbrEtudiant}}</p>
+
+    <p>Voici les étudiants présents dans cette classe : </p>
+    {{range .ListEtudiant}}
+    <p>{{.Nom}} {{.Prenom}} {{.Age}} ans </p>
+    {{if eq .Sexe "Homme"}}
+    <img src="/assets/img/Symbole_Martien-Masculin.png" alt="">
+    {{else}}
+    <img src="/assets/img/B9719431430Z.1_20190430160531_000+GE8DGJAJ1.1-0.png.jpg" alt="">
+    {{end}}
+    {{end}}
+
+</body>
+
+</html>
+{{end}}
