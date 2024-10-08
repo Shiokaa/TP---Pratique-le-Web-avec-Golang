@@ -1,0 +1,47 @@
+{{define "form"}}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style/form.css">
+    <title>Form</title>
+</head>
+
+<body>
+    <form action="/user/treatment" method="post">
+        <div class="title">
+            <h1>Formulaire</h1>
+        </div>
+        <div class="header-form">
+            <div class="form-surname">
+                <p>Nom</p>
+                <input type="text">
+            </div>
+            <div class="form-name">
+                <p>Prenom</p>
+                <input type="text">
+            </div>
+        </div>
+        <div class="footer-form">
+            <div class="form-birth">
+                <p>Date de naissance</p>
+                <input type="text">
+            </div>
+            <div class="form-gender">
+                <p>Sexe</p>
+                <select>
+                    <option>Choisissez votre sexe</option>
+                    <option>Homme</option>
+                    <option>Femme</option>
+                    <option>Autre</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit">Valider</button>
+    </form>
+</body>
+
+</html>
+{{end}}

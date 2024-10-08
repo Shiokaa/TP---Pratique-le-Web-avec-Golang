@@ -8,10 +8,10 @@ import (
 )
 
 func main() {
-	fileServer := http.FileServer(http.Dir("../assets/"))
+	fileServer := http.FileServer(http.Dir("./assets/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
-	temp, err := template.ParseGlob("../templates/*.html")
+	temp, err := template.ParseGlob("./templates/*.html")
 	if err != nil {
 		fmt.Println(fmt.Sprint("ERREUR => %v", err.Error()))
 		os.Exit(02)
@@ -56,5 +56,16 @@ func main() {
 		temp.ExecuteTemplate(w, "change", data)
 	})
 
+	http.HandleFunc("/user/form", func(w http.ResponseWriter, r *http.Request) {
+		temp.ExecuteTemplate(w, "form", nil)
+	})
+	http.HandleFunc("/user/treatment", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+	http.HandleFunc("/user/display", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+
 	http.ListenAndServe("localhost:8080", nil)
+
 }

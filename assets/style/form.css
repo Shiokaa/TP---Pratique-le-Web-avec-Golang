@@ -1,0 +1,80 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form {
+  height: 375px;
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  border: 2px solid black;
+  border-radius: 20px;
+}
+
+.title {
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+
+.header-form,
+.footer-form {
+  display: flex;
+  gap: 50px;
+}
+
+.form-surname,
+.form-name,
+.form-birth,
+.form-gender {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+select {
+  width: 199px;
+}
+
+p {
+  font-size: 1.2rem;
+}
+
+input,
+select {
+  font-size: 1.1rem;
+}
+
+button {
+  height: 35px;
+  width: 125px;
+  border-style: none;
+  border-radius: 20px;
+  background-color: black;
+  font-size: 1.1rem;
+  color: white;
+  margin-top: 20px;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  transition: 0.3s;
+  transform: translateY(-5%);
+}
