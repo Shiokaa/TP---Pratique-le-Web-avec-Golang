@@ -1,0 +1,27 @@
+{{define "change"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style/change.css">
+    <title>Change</title>
+</head>
+
+<body>
+    {{if .IsPair}}
+    <h1 class="pair">Le nombre de vue est pair : {{.Counter}}</h1>
+    {{else}}
+    <h1 class="impair">Le nombre de vue est impair : {{.Counter}}</h1>
+    {{end}}
+    <button class="refresh" onclick="refreshPage()">Raffraichir la page !</button>
+</body>
+
+</html>
+<script>
+    function refreshPage() {
+        location.reload();
+    }
+</script>
+{{end}}

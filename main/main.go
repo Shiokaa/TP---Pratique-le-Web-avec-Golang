@@ -42,5 +42,19 @@ func main() {
 		temp.ExecuteTemplate(w, "promo", classe)
 	})
 
+	type PageChange struct {
+		IsPair  bool
+		Counter int
+	}
+
+	var Counter int
+
+	http.HandleFunc("/change", func(w http.ResponseWriter, r *http.Request) {
+		Counter++
+		data := PageChange{Counter: Counter, IsPair: Counter%2 == 0}
+
+		temp.ExecuteTemplate(w, "change", data)
+	})
+
 	http.ListenAndServe("localhost:8080", nil)
 }
