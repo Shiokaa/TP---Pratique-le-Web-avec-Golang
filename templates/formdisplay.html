@@ -5,18 +5,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style/formdisplay.css">
     <title>Form Display</title>
 </head>
 
 <body>
 
     {{if .IsEmpty}}
-    <p>Aucunes données enregistrées</p>
+    <p class="isempty">Erreur !</p>
     {{else}}
     {{if .CheckValue}}
-    <p>La valeur n'est pas valide {{.Value}}</p>
+    <div class="form">
+        <div class="title">
+            <h1>Vos Données</h1>
+        </div>
+        <div class="things">
+            <p>Votre nom : {{.Surname}}</p>
+            <p>Votre prénom : {{.Firstname}}</p>
+            <p>Votre date de naissance : {{.Birth}}</p>
+            <p>Votre genre : {{.Gender}}</p>
+        </div>
+    </div>
     {{else}}
-    <p>La valeur est valide {{.Value}}</p>
+    <p class="error">Erreur !</p>
     {{end}}
     {{end}}
 </body>

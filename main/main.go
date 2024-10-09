@@ -8,14 +8,10 @@ import (
 	"regexp"
 )
 
-type StockageForm struct {
-	CheckValue bool
-	Value      string
-}
-
-var stockageForm = StockageForm{false, ""}
-
 func main() {
+
+	/*--------------------- DONNEE INIT ----------------------*/
+
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
@@ -24,6 +20,8 @@ func main() {
 		fmt.Println(fmt.Sprint("ERREUR => %v", err.Error()))
 		os.Exit(02)
 	}
+
+	/*--------------------- PROMO PAGE ----------------------*/
 
 	type Etudiant struct {
 		Nom    string
@@ -50,6 +48,8 @@ func main() {
 		temp.ExecuteTemplate(w, "promo", classe)
 	})
 
+	/*--------------------- CHANGE PAGE ----------------------*/
+
 	type PageChange struct {
 		IsPair  bool
 		Counter int
@@ -64,9 +64,23 @@ func main() {
 		temp.ExecuteTemplate(w, "change", data)
 	})
 
+	/*--------------------- FORM PAGE ----------------------*/
+
 	http.HandleFunc("/user/form", func(w http.ResponseWriter, r *http.Request) {
 		temp.ExecuteTemplate(w, "form", nil)
 	})
+
+	/*--------------------- TRAITEMENT PAGE ----------------------*/
+
+	type StockageForm struct {
+		CheckValue bool
+		Surname    string
+		Firstname  string
+		Birth      string
+		Gender     string
+	}
+
+	var stockageForm = StockageForm{false, "", "", "", ""}
 
 	http.HandleFunc("/user/treatment", func(w http.ResponseWriter, r *http.Request) {
 
@@ -75,28 +89,61 @@ func main() {
 			return
 		}
 
-		checkValue, _ := regexp.MatchString("^[a-zA-Z]{1,32}$", r.FormValue("surname"))
+		checkValueSurname, _ := regexp.MatchString("^[a-zA-Z]{1,32}$", r.FormValue("surname"))
+		checkValueFirstname, _ := regexp.MatchString("^[a-zA-Z]{1,32}$", r.FormValue("firstname"))
+		checkValueBirth, _ := regexp.MatchString("^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/([0-9]{4})$", r.FormValue("birth"))
+		gender := r.FormValue("gender")
 
-		if !checkValue {
-			stockageForm = StockageForm{false, ""}
-			http.Redirect(w, r, "/erreur?code=400&message=Oups les données sont invalides", http.StatusMovedPermanently)
+		validGender := []string{"Homme", "Femme", "Autre"}
+		isValidGender := false
+
+		for _, v := range validGender {
+			if v == gender {
+				isValidGender = true
+				break
+			}
+		}
+
+		if !isValidGender {
+			http.Redirect(w, r, "/erreur?code=400&message=Oups genre invalide", http.StatusMovedPermanently)
 			return
 		}
-		stockageForm = StockageForm{true, r.FormValue("surname")}
+
+		if !checkValueBirth {
+			stockageForm = StockageForm{false, "", "", "", ""}
+			http.Redirect(w, r, "/erreur?code=400&message=Oups la date de naissance n'est pas bonne", http.StatusMovedPermanently)
+			return
+		}
+
+		if !checkValueSurname || !checkValueFirstname {
+			stockageForm = StockageForm{false, "", "", "", ""}
+			http.Redirect(w, r, "/erreur?code=400&message=Oups des données sont invalides", http.StatusMovedPermanently)
+			return
+		}
+
+		stockageForm = StockageForm{true, r.FormValue("surname"), r.FormValue("firstname"), r.FormValue("birth"), gender}
 
 		http.Redirect(w, r, "/user/display", http.StatusSeeOther)
 	})
 
+	/*--------------------- DISPLAY PAGE ----------------------*/
+
 	type PageDisplay struct {
 		CheckValue bool
-		Value      string
+		Surname    string
+		Firstname  string
+		Birth      string
+		Gender     string
 		IsEmpty    bool
 	}
 
 	http.HandleFunc("/user/display", func(w http.ResponseWriter, r *http.Request) {
-		data := PageDisplay{stockageForm.CheckValue, stockageForm.Value, (!stockageForm.CheckValue && stockageForm.Value == "")}
+		data := PageDisplay{stockageForm.CheckValue, stockageForm.Surname, stockageForm.Firstname, stockageForm.Birth, stockageForm.Gender, (!stockageForm.CheckValue && (stockageForm.Surname == "" || stockageForm.Firstname == "" || stockageForm.Birth == "" || stockageForm.Gender == ""))}
+
 		temp.ExecuteTemplate(w, "formdisplay", data)
 	})
+
+	/*--------------------- ERREUR PAGE ----------------------*/
 
 	http.HandleFunc("/erreur", func(w http.ResponseWriter, r *http.Request) {
 		code, message := r.FormValue("code"), r.FormValue("message")
@@ -106,6 +153,8 @@ func main() {
 		}
 		fmt.Fprint(w, "Oups une erreur serveur est survenue")
 	})
+
+	/*--------------------- LANCEMENT DU SITE ----------------------*/
 
 	http.ListenAndServe("localhost:8080", nil)
 
