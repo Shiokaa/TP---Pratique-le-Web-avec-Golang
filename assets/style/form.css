@@ -50,10 +50,6 @@ select {
   width: 199px;
 }
 
-p {
-  font-size: 1.2rem;
-}
-
 input,
 select {
   font-size: 1.1rem;

@@ -5,7 +5,15 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"regexp"
 )
+
+type StockageForm struct {
+	CheckValue bool
+	Value      string
+}
+
+var stockageForm = StockageForm{false, ""}
 
 func main() {
 	fileServer := http.FileServer(http.Dir("./assets/"))
@@ -59,11 +67,44 @@ func main() {
 	http.HandleFunc("/user/form", func(w http.ResponseWriter, r *http.Request) {
 		temp.ExecuteTemplate(w, "form", nil)
 	})
+
 	http.HandleFunc("/user/treatment", func(w http.ResponseWriter, r *http.Request) {
 
-	})
-	http.HandleFunc("/user/display", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Redirect(w, r, "/erreur?code=400&message=Oups méthode incorrecte", http.StatusMovedPermanently)
+			return
+		}
 
+		checkValue, _ := regexp.MatchString("^[a-zA-Z]{1,32}$", r.FormValue("surname"))
+
+		if !checkValue {
+			stockageForm = StockageForm{false, ""}
+			http.Redirect(w, r, "/erreur?code=400&message=Oups les données sont invalides", http.StatusMovedPermanently)
+			return
+		}
+		stockageForm = StockageForm{true, r.FormValue("surname")}
+
+		http.Redirect(w, r, "/user/display", http.StatusSeeOther)
+	})
+
+	type PageDisplay struct {
+		CheckValue bool
+		Value      string
+		IsEmpty    bool
+	}
+
+	http.HandleFunc("/user/display", func(w http.ResponseWriter, r *http.Request) {
+		data := PageDisplay{stockageForm.CheckValue, stockageForm.Value, (!stockageForm.CheckValue && stockageForm.Value == "")}
+		temp.ExecuteTemplate(w, "formdisplay", data)
+	})
+
+	http.HandleFunc("/erreur", func(w http.ResponseWriter, r *http.Request) {
+		code, message := r.FormValue("code"), r.FormValue("message")
+		if code != "" && message != "" {
+			fmt.Fprintf(w, "Erreur %s - %s", code, message)
+			return
+		}
+		fmt.Fprint(w, "Oups une erreur serveur est survenue")
 	})
 
 	http.ListenAndServe("localhost:8080", nil)

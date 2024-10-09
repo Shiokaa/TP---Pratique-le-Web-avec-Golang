@@ -1,0 +1,25 @@
+{{define "formdisplay"}}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Display</title>
+</head>
+
+<body>
+
+    {{if .IsEmpty}}
+    <p>Aucunes données enregistrées</p>
+    {{else}}
+    {{if .CheckValue}}
+    <p>La valeur n'est pas valide {{.Value}}</p>
+    {{else}}
+    <p>La valeur est valide {{.Value}}</p>
+    {{end}}
+    {{end}}
+</body>
+
+</html>
+{{end}}
