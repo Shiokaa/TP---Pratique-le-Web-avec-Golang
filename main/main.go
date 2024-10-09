@@ -17,7 +17,7 @@ func main() {
 
 	temp, err := template.ParseGlob("./templates/*.html")
 	if err != nil {
-		fmt.Println(fmt.Sprint("ERREUR => %v", err.Error()))
+		fmt.Println(fmt.Printf("ERREUR => %v", err.Error()))
 		os.Exit(02)
 	}
 
