@@ -17,17 +17,26 @@
         <div class="header-form">
             <div class="form-surname">
                 <label for="surname">Nom</label>
-                <input type="text" name="surname">
+                <input type="text" name="surname" required>
+                {{if .CheckChampSurname}}
+                <p>Renseignez ce champ !</p>
+                {{end}}
             </div>
             <div class="form-name">
                 <label for="firstname">Prenom</label>
-                <input type="text" name="firstname">
+                <input type="text" name="firstname" required>
+                {{if .CheckChampFirstname}}
+                <p>Renseignez ce champ !</p>
+                {{end}}
             </div>
         </div>
         <div class="footer-form">
             <div class="form-birth">
                 <label for="birth">Date de naissance</label>
-                <input type="text" name="birth">
+                <input type="text" name="birth" required>
+                {{if .CheckChampBirth}}
+                <p>Renseignez ce champ !</p>
+                {{end}}
             </div>
             <div class="form-gender">
                 <label for="gender">Sexe</label>
@@ -37,6 +46,9 @@
                     <option>Femme</option>
                     <option>Autre</option>
                 </select>
+                {{if .CheckChampGender}}
+                <p>Renseignez ce champ !</p>
+                {{end}}
             </div>
         </div>
         <button type="submit">Valider</button>

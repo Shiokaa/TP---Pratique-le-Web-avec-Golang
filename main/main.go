@@ -66,8 +66,36 @@ func main() {
 
 	/*--------------------- FORM PAGE ----------------------*/
 
+	type ChampInvalide struct {
+		CheckChampSurname   bool
+		CheckChampFirstname bool
+		CheckChampBirth     bool
+		CheckChampGender    bool
+	}
+
 	http.HandleFunc("/user/form", func(w http.ResponseWriter, r *http.Request) {
-		temp.ExecuteTemplate(w, "form", nil)
+
+		data := ChampInvalide{false, false, false, false}
+
+		message := r.FormValue("message")
+
+		if message == "Surnom Invalide" {
+			data.CheckChampSurname = true
+		}
+
+		if message == "Prenom Invalide" {
+			data.CheckChampFirstname = true
+		}
+
+		if message == "Date Invalide" {
+			data.CheckChampBirth = true
+		}
+
+		if message == "Sexe Invalide" {
+			data.CheckChampGender = true
+		}
+
+		temp.ExecuteTemplate(w, "form", data)
 	})
 
 	/*--------------------- TRAITEMENT PAGE ----------------------*/
@@ -104,20 +132,26 @@ func main() {
 			}
 		}
 
-		if !isValidGender {
-			http.Redirect(w, r, "/erreur?code=400&message=Oups genre invalide", http.StatusMovedPermanently)
+		if !checkValueSurname {
+			stockageForm = StockageForm{false, "", "", "", ""}
+			http.Redirect(w, r, "/user/form?message=Surnom Invalide", http.StatusMovedPermanently)
+			return
+		}
+
+		if !checkValueFirstname {
+			stockageForm = StockageForm{false, "", "", "", ""}
+			http.Redirect(w, r, "/user/form?message=Prenom Invalide", http.StatusMovedPermanently)
 			return
 		}
 
 		if !checkValueBirth {
 			stockageForm = StockageForm{false, "", "", "", ""}
-			http.Redirect(w, r, "/erreur?code=400&message=Oups la date de naissance n'est pas bonne", http.StatusMovedPermanently)
+			http.Redirect(w, r, "/user/form?message=Date Invalide", http.StatusMovedPermanently)
 			return
 		}
 
-		if !checkValueSurname || !checkValueFirstname {
-			stockageForm = StockageForm{false, "", "", "", ""}
-			http.Redirect(w, r, "/erreur?code=400&message=Oups des données sont invalides", http.StatusMovedPermanently)
+		if !isValidGender {
+			http.Redirect(w, r, "/user/form?message=Sexe Invalide", http.StatusMovedPermanently)
 			return
 		}
 

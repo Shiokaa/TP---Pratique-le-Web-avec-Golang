@@ -44,6 +44,7 @@ form {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  position: relative;
 }
 
 select {
@@ -52,6 +53,7 @@ select {
 
 input,
 select {
+  margin-bottom: 25px;
   font-size: 1.1rem;
 }
 
@@ -73,4 +75,11 @@ button:hover {
   border: 1px solid black;
   transition: 0.3s;
   transform: translateY(-5%);
+}
+
+p {
+  position: absolute;
+  bottom: 0;
+  color: red;
+  font-size: 0.9rem;
 }
